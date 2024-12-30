@@ -1,4 +1,5 @@
-import files
+import json
+from files import read, update
 
 def file_log(func):
     def wrapper(*args, **kwargs):
@@ -24,8 +25,9 @@ def file_log(func):
 
 def console_log(func):
     def wrapper(*args, **kwargs):
+        isinstance = args[0]
         func(*args, **kwargs)  # Call the decorated function with unpacked arguments
-        print("User saved")    # Message after executing the decorated function
+        print(f"{isinstance.class_name} saved")    # Message after executing the decorated function
     return wrapper
 
 def decorator1(func):
@@ -36,7 +38,9 @@ def decorator1(func):
     return wrapper
 
 class User:
-    def __init__(self, username, age, first_name, last_name, password=None, email=None):
+    class_name = "User"
+
+    def __init__(self, username, first_name, last_name, password=None, age=None, email=None):
         self.username = username
         self.age = age
         self.first_name = first_name
@@ -53,21 +57,26 @@ class User:
             "password": self.password,
             "email": self.email
         }
+    
+    def __repr__(self):
+        instance = f"{self.first_name} {self.last_name} ({self.username})"
+        return f"<User: {instance}>"
+    
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
-    @file_log
     @console_log
     def save(self):
         # Read existing data from users.json
         try:
-            users = files.read("users.json")
+            users = read("users.json")
         except FileNotFoundError:
             users = []
 
         # Check if the user already exists
         if not any(user['username'] == self.username for user in users):
             users.append(self.as_dict())
-            files.update("users.json", users)
-
+            update("users.json", users)
 
 class Post:
     def __init__(self, title, content, status, created_by):
@@ -87,15 +96,14 @@ class Post:
     def save(self):
         # Read existing data from posts.json
         try:
-            posts = files.read("posts.json")
+            posts = read("posts.json")
         except FileNotFoundError:
             posts = []
 
         # Check if the post already exists
         if not any(post['title'] == self.title for post in posts):
             posts.append(self.as_dict())
-            files.update("posts.json", posts)
-
+            update("posts.json", posts)
 
 class Article:
     def __init__(self, title, content, status, image, created_by):
@@ -117,11 +125,11 @@ class Article:
     def save(self):
         # Read existing data from articles.json
         try:
-            articles = files.read("articles.json")
+            articles = read("articles.json")
         except FileNotFoundError:
             articles = []
 
         # Check if the article already exists
         if not any(article['title'] == self.title for article in articles):
             articles.append(self.as_dict())
-            files.update("articles.json", articles)
+            update("articles.json", articles)
