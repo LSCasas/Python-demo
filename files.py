@@ -7,7 +7,7 @@ def create(file_name: str, content: list | dict = None):
     try:
         with open(file_name, mode) as file:
             if content and isinstance(content, (list, dict)):
-                content = json.dumps(content)  # Convertir a JSON
+                content = json.dumps(content)  # Convert to JSON
                 file.write(content)
     except FileExistsError as error:
         raise IOError(f"File '{file_name}' already exists") from error
@@ -16,11 +16,11 @@ def create(file_name: str, content: list | dict = None):
 
 
 def update(file_name, content: list | dict, overwrite=False):
-    # Validar que el contenido sea una lista o un diccionario
+    # Validate that the content is a list or a dictionary
     if not isinstance(content, (list, dict)):
         raise ValueError("content argument must be specified and should not be empty")
     
-    # Leer el contenido actual del archivo
+    # Read the current content of the file
     try:
         file_content = read(file_name)
     except FileNotFoundError:
@@ -38,19 +38,19 @@ def update(file_name, content: list | dict, overwrite=False):
         elif isinstance(content, list):
             file_content = [file_content] + content
 
-    # Escribir el contenido actualizado en el archivo
+    # Write the updated content back to the file
     with open(file_name, "w") as file:
         file.write(json.dumps(file_content))
 
 
 def read(file_name: str):
     if not os.path.exists(file_name):
-        return []  # Si el archivo no existe, devolver lista vacía
+        return []  # If the file doesn't exist, return an empty list
     
     with open(file_name, 'r') as file:
-        content = file.read().strip()  # Usamos .strip() para eliminar espacios en blanco
+        content = file.read().strip()  # Use .strip() to remove whitespace
 
-    # Si el archivo está vacío, devolvemos una lista vacía
+    # If the file is empty, return an empty list
     if not content:
         return []
 

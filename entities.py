@@ -5,18 +5,18 @@ def file_log(func):
         file_name = "activity.log"
         content = "User saved\n"
 
-        # Ejecutar la función decorada
+        # Execute the decorated function
         func(*args, **kwargs)
 
-        # Manejo del archivo
+        # File handling
         try:
             with open(file_name, "r") as file:
-                pass  # Archivo existe, no es necesario crear uno nuevo
+                pass  # File exists, no need to create a new one
         except FileNotFoundError:
             with open(file_name, "w") as file:
-                file.write("")  # Crear archivo vacío si no existe
+                file.write("")  # Create an empty file if it does not exist
 
-        # Actualizar el archivo con contenido
+        # Update the file with content
         with open(file_name, "a") as file:
             file.write(content)
     
@@ -24,15 +24,15 @@ def file_log(func):
 
 def console_log(func):
     def wrapper(*args, **kwargs):
-        func(*args, **kwargs)  # Llamar a la función decorada con los argumentos desempaquetados
-        print("User saved")    # Mensaje después de ejecutar la función decorada
+        func(*args, **kwargs)  # Call the decorated function with unpacked arguments
+        print("User saved")    # Message after executing the decorated function
     return wrapper
 
 def decorator1(func):
     def wrapper(*args, **kwargs):
-        print("Paso 1") 
+        print("Step 1") 
         func(*args, **kwargs)
-        print("Paso al final")
+        print("Final step")
     return wrapper
 
 class User:
@@ -53,16 +53,17 @@ class User:
             "password": self.password,
             "email": self.email
         }
+
     @file_log
     @console_log
     def save(self):
-        # Leemos los datos existentes en users.json
+        # Read existing data from users.json
         try:
             users = files.read("users.json")
         except FileNotFoundError:
             users = []
 
-        # Verificar si el usuario ya existe
+        # Check if the user already exists
         if not any(user['username'] == self.username for user in users):
             users.append(self.as_dict())
             files.update("users.json", users)
@@ -84,13 +85,13 @@ class Post:
         }
 
     def save(self):
-        # Leemos los datos existentes en posts.json
+        # Read existing data from posts.json
         try:
             posts = files.read("posts.json")
         except FileNotFoundError:
             posts = []
 
-        # Verificar si el post ya existe
+        # Check if the post already exists
         if not any(post['title'] == self.title for post in posts):
             posts.append(self.as_dict())
             files.update("posts.json", posts)
@@ -114,13 +115,13 @@ class Article:
         }
 
     def save(self):
-        # Leemos los datos existentes en articles.json
+        # Read existing data from articles.json
         try:
             articles = files.read("articles.json")
         except FileNotFoundError:
             articles = []
 
-        # Verificar si el artículo ya existe
+        # Check if the article already exists
         if not any(article['title'] == self.title for article in articles):
             articles.append(self.as_dict())
             files.update("articles.json", articles)
