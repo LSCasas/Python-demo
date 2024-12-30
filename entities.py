@@ -1,5 +1,40 @@
 import files
 
+def file_log(func):
+    def wrapper(*args, **kwargs):
+        file_name = "activity.log"
+        content = "User saved\n"
+
+        # Ejecutar la función decorada
+        func(*args, **kwargs)
+
+        # Manejo del archivo
+        try:
+            with open(file_name, "r") as file:
+                pass  # Archivo existe, no es necesario crear uno nuevo
+        except FileNotFoundError:
+            with open(file_name, "w") as file:
+                file.write("")  # Crear archivo vacío si no existe
+
+        # Actualizar el archivo con contenido
+        with open(file_name, "a") as file:
+            file.write(content)
+    
+    return wrapper
+
+def console_log(func):
+    def wrapper(*args, **kwargs):
+        func(*args, **kwargs)  # Llamar a la función decorada con los argumentos desempaquetados
+        print("User saved")    # Mensaje después de ejecutar la función decorada
+    return wrapper
+
+def decorator1(func):
+    def wrapper(*args, **kwargs):
+        print("Paso 1") 
+        func(*args, **kwargs)
+        print("Paso al final")
+    return wrapper
+
 class User:
     def __init__(self, username, age, first_name, last_name, password=None, email=None):
         self.username = username
@@ -18,7 +53,8 @@ class User:
             "password": self.password,
             "email": self.email
         }
-
+    @file_log
+    @console_log
     def save(self):
         # Leemos los datos existentes en users.json
         try:
