@@ -54,4 +54,5 @@ def read(file_name: str):
     if not content:
         return []
 
+
     return json.loads(content)

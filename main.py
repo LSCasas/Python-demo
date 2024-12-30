@@ -10,4 +10,3 @@ post1.save()
 
 article1 = entities.Article("Primaer Artículo", "Contenido adel primer artículo", "publicado", "imagen1.jpg", "alfredo")
 article1.save()
-
